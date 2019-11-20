@@ -38,7 +38,7 @@ import javax.xml.bind.annotation.XmlTransient;
     , @NamedQuery(name = "Livro.findByIsbn", query = "SELECT l FROM Livro l WHERE l.isbn = :isbn")
     , @NamedQuery(name = "Livro.findByEdicao", query = "SELECT l FROM Livro l WHERE l.edicao = :edicao")
     , @NamedQuery(name = "Livro.findByAno", query = "SELECT l FROM Livro l WHERE l.ano = :ano")})
-public class Livro implements Serializable, Comparable<Livro> {
+public class Livro implements Serializable, Comparable<Livro>, IEntidade {
 
     private static final long serialVersionUID = 1L;
     @Id
@@ -64,14 +64,14 @@ public class Livro implements Serializable, Comparable<Livro> {
     private String arquivo;
     @ManyToMany
     @JoinTable(name = "LivroAssunto",
-        joinColumns = @JoinColumn(name = "idLivro"),
-        inverseJoinColumns = @JoinColumn(name = "idAssunto")
+            joinColumns = @JoinColumn(name = "idLivro"),
+            inverseJoinColumns = @JoinColumn(name = "idAssunto")
     )
     private List<Assunto> assuntoList;
     @ManyToMany
     @JoinTable(name = "AutorLivro",
-        joinColumns = @JoinColumn(name = "idLivro"),
-        inverseJoinColumns = @JoinColumn(name = "idAutor")
+            joinColumns = @JoinColumn(name = "idLivro"),
+            inverseJoinColumns = @JoinColumn(name = "idAutor")
     )
     private List<Autor> autorList;
     @OneToMany(mappedBy = "idLivro")
@@ -95,6 +95,7 @@ public class Livro implements Serializable, Comparable<Livro> {
         this.ano = ano;
     }
 
+    @Override
     public Integer getId() {
         return id;
     }
@@ -150,20 +151,18 @@ public class Livro implements Serializable, Comparable<Livro> {
     public void setArquivo(String arquivo) {
         this.arquivo = arquivo;
     }
-    
-    
-    
+
     public String getAssuntos() {
         String texto = "";
-        for(Assunto a: assuntoList){
+        for (Assunto a : assuntoList) {
             texto = texto + a.getAssunto() + "; ";
         }
         return texto;
     }
-    
+
     public String getAutores() {
         String texto = "";
-        for(Autor a: autorList){
+        for (Autor a : autorList) {
             texto = texto + a.getNome() + "; ";
         }
         return texto;
@@ -203,21 +202,21 @@ public class Livro implements Serializable, Comparable<Livro> {
     public void setIdEditora(Editora idEditora) {
         this.idEditora = idEditora;
     }
-    
+
     public int getQtdeExemplarCircular() {
         int i = 0;
-        for(Exemplar e: exemplarList) {
-            if(e.getCircular()) {
+        for (Exemplar e : exemplarList) {
+            if (e.getCircular()) {
                 i++;
             }
         }
         return i;
     }
-    
+
     public int getQtdeExemplarNaoCircular() {
         int i = 0;
-        for(Exemplar e: exemplarList) {
-            if(!e.getCircular()) {
+        for (Exemplar e : exemplarList) {
+            if (!e.getCircular()) {
                 i++;
             }
         }
@@ -248,10 +247,9 @@ public class Livro implements Serializable, Comparable<Livro> {
     public String toString() {
         return titulo;
     }
-    
+
     @Override
     public int compareTo(Livro livro) {
         return this.titulo.toLowerCase().compareTo(livro.getTitulo().toLowerCase());
     }
-    
 }

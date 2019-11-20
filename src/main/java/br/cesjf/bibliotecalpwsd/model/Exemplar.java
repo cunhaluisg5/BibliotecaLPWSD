@@ -33,7 +33,7 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Exemplar.findAll", query = "SELECT e FROM Exemplar e")
     , @NamedQuery(name = "Exemplar.findById", query = "SELECT e FROM Exemplar e WHERE e.id = :id")
     , @NamedQuery(name = "Exemplar.findByCircular", query = "SELECT e FROM Exemplar e WHERE e.circular = :circular")})
-public class Exemplar implements Serializable {
+public class Exemplar implements Serializable, IEntidade {
 
     private static final long serialVersionUID = 1L;
     @Id
@@ -58,6 +58,7 @@ public class Exemplar implements Serializable {
         this.id = id;
     }
 
+    @Override
     public Integer getId() {
         return id;
     }
@@ -73,9 +74,9 @@ public class Exemplar implements Serializable {
     public void setCircular(Boolean circular) {
         this.circular = circular;
     }
-    
+
     public String getCircularTexto() {
-        if(circular) {
+        if (circular) {
             return "Sim";
         } else {
             return "Não";
@@ -132,5 +133,4 @@ public class Exemplar implements Serializable {
     public String toString() {
         return "Exemplar: " + id + " - Circular: " + getCircularTexto();
     }
-    
 }

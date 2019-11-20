@@ -36,7 +36,7 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "Reserva.findAll", query = "SELECT r FROM Reserva r")
     , @NamedQuery(name = "Reserva.findById", query = "SELECT r FROM Reserva r WHERE r.id = :id")
     , @NamedQuery(name = "Reserva.findByDataReserva", query = "SELECT r FROM Reserva r WHERE r.dataReserva = :dataReserva")})
-public class Reserva implements Serializable {
+public class Reserva implements Serializable, IEntidade {
 
     private static final long serialVersionUID = 1L;
     @Id
@@ -85,6 +85,7 @@ public class Reserva implements Serializable {
         this.cancelada = false;
     }
 
+    @Override
     public Integer getId() {
         return id;
     }
@@ -148,27 +149,27 @@ public class Reserva implements Serializable {
     public void setDataDevolucaoPrevista(Date dataDevolucaoPrevista) {
         this.dataDevolucaoPrevista = dataDevolucaoPrevista;
     }
-    
+
     public void calculaDevolucaoPrevista() {
         Calendar c = Calendar.getInstance();
-        if(dataReserva != null){
-            
+        if (dataReserva != null) {
+
             c.setTime(dataReserva);
-            
-            if(idExemplar.getCircular() && idUsuario.getTipoTexto().equals("Aluno")){
+
+            if (idExemplar.getCircular() && idUsuario.getTipoTexto().equals("Aluno")) {
                 c.add(Calendar.DAY_OF_MONTH, 10);
-            } else if(idExemplar.getCircular() && !idUsuario.getTipoTexto().equals("Aluno")){
+            } else if (idExemplar.getCircular() && !idUsuario.getTipoTexto().equals("Aluno")) {
                 c.add(Calendar.DAY_OF_MONTH, 15);
-            } else if(!idExemplar.getCircular()) {
+            } else if (!idExemplar.getCircular()) {
                 c.add(Calendar.DAY_OF_MONTH, 1);
             }
-            
-            if(c.get(Calendar.DAY_OF_WEEK) == Calendar.SATURDAY){
+
+            if (c.get(Calendar.DAY_OF_WEEK) == Calendar.SATURDAY) {
                 c.add(Calendar.DAY_OF_MONTH, 2);
-            } else if(c.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY){
+            } else if (c.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY) {
                 c.add(Calendar.DAY_OF_MONTH, 1);
             }
-        }else {
+        } else {
             c.setTime(new Date());
         }
         dataDevolucaoPrevista = c.getTime();
@@ -198,5 +199,4 @@ public class Reserva implements Serializable {
     public String toString() {
         return Integer.toString(id);
     }
-    
 }

@@ -35,7 +35,7 @@ import javax.xml.bind.annotation.XmlTransient;
     , @NamedQuery(name = "Usuario.findByEmail", query = "SELECT u FROM Usuario u WHERE u.email = :email")
     , @NamedQuery(name = "Usuario.findByUsuario", query = "SELECT u FROM Usuario u WHERE u.usuario = :usuario")
     , @NamedQuery(name = "Usuario.findBySenha", query = "SELECT u FROM Usuario u WHERE u.senha = :senha")})
-public class Usuario implements Serializable {
+public class Usuario implements Serializable, IEntidade {
 
     private static final long serialVersionUID = 1L;
     @Id
@@ -79,6 +79,7 @@ public class Usuario implements Serializable {
         this.senha = senha;
     }
 
+    @Override
     public Integer getId() {
         return id;
     }
@@ -97,24 +98,24 @@ public class Usuario implements Serializable {
 
     public String getTipo() {
         return tipo;
-        
+
     }
 
     public void setTipo(String tipo) {
         this.tipo = tipo;
     }
-    
+
     public String getTipoTexto() {
         //1 - Aluno, 2 - Professor, 3 - Funcionário, 4 - Bibliotecário e 5 - Administrador
-        if(tipo.equals("1")) {
+        if (tipo.equals("1")) {
             return "Aluno";
-        } else if(tipo.equals("2")) {
+        } else if (tipo.equals("2")) {
             return "Professor";
-        } else if(tipo.equals("3")) {
+        } else if (tipo.equals("3")) {
             return "Funcionário";
-        } else if(tipo.equals("4")) {
+        } else if (tipo.equals("4")) {
             return "Bibliotecário";
-        } else if(tipo.equals("5")) {
+        } else if (tipo.equals("5")) {
             return "Administrador";
         }
         return tipo;
@@ -186,5 +187,4 @@ public class Usuario implements Serializable {
     public String toString() {
         return nome;
     }
-    
 }

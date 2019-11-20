@@ -31,7 +31,7 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Autor.findAll", query = "SELECT a FROM Autor a")
     , @NamedQuery(name = "Autor.findById", query = "SELECT a FROM Autor a WHERE a.id = :id")
     , @NamedQuery(name = "Autor.findByNome", query = "SELECT a FROM Autor a WHERE a.nome = :nome")})
-public class Autor implements Serializable, Comparable<Autor> {
+public class Autor implements Serializable, Comparable<Autor>, IEntidade {
 
     private static final long serialVersionUID = 1L;
     @Id
@@ -42,7 +42,7 @@ public class Autor implements Serializable, Comparable<Autor> {
     @Basic(optional = false)
     @Column(name = "nome")
     private String nome;
-    @ManyToMany(mappedBy="autorList")
+    @ManyToMany(mappedBy = "autorList")
     private List<Livro> livroList;
 
     public Autor() {
@@ -57,6 +57,7 @@ public class Autor implements Serializable, Comparable<Autor> {
         this.nome = nome;
     }
 
+    @Override
     public Integer getId() {
         return id;
     }
@@ -111,5 +112,4 @@ public class Autor implements Serializable, Comparable<Autor> {
     public int compareTo(Autor autor) {
         return this.nome.toLowerCase().compareTo(autor.getNome().toLowerCase());
     }
-    
 }

@@ -31,7 +31,7 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Assunto.findAll", query = "SELECT a FROM Assunto a")
     , @NamedQuery(name = "Assunto.findById", query = "SELECT a FROM Assunto a WHERE a.id = :id")
     , @NamedQuery(name = "Assunto.findByAssunto", query = "SELECT a FROM Assunto a WHERE a.assunto = :assunto")})
-public class Assunto implements Serializable, Comparable<Assunto> {
+public class Assunto implements Serializable, Comparable<Assunto>, IEntidade {
 
     private static final long serialVersionUID = 1L;
     @Id
@@ -42,7 +42,7 @@ public class Assunto implements Serializable, Comparable<Assunto> {
     @Basic(optional = false)
     @Column(name = "assunto")
     private String assunto;
-    @ManyToMany(mappedBy="assuntoList")
+    @ManyToMany(mappedBy = "assuntoList")
     private List<Livro> livroList;
 
     public Assunto() {
@@ -57,6 +57,7 @@ public class Assunto implements Serializable, Comparable<Assunto> {
         this.assunto = assunto;
     }
 
+    @Override
     public Integer getId() {
         return id;
     }
@@ -106,10 +107,9 @@ public class Assunto implements Serializable, Comparable<Assunto> {
     public String toString() {
         return assunto;
     }
-    
+
     @Override
     public int compareTo(Assunto assunto) {
         return this.assunto.toLowerCase().compareTo(assunto.getAssunto().toLowerCase());
     }
-    
 }

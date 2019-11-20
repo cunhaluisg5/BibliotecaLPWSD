@@ -35,7 +35,7 @@ import javax.xml.bind.annotation.XmlRootElement;
     , @NamedQuery(name = "Emprestimo.findById", query = "SELECT e FROM Emprestimo e WHERE e.id = :id")
     , @NamedQuery(name = "Emprestimo.findByDataEmprestimo", query = "SELECT e FROM Emprestimo e WHERE e.dataEmprestimo = :dataEmprestimo")
     , @NamedQuery(name = "Emprestimo.findByDataDevolucao", query = "SELECT e FROM Emprestimo e WHERE e.dataDevolucao = :dataDevolucao")})
-public class Emprestimo implements Serializable {
+public class Emprestimo implements Serializable, IEntidade {
 
     private static final long serialVersionUID = 1L;
     @Id
@@ -72,6 +72,7 @@ public class Emprestimo implements Serializable {
         this.id = id;
     }
 
+    @Override
     public Integer getId() {
         return id;
     }
@@ -119,24 +120,24 @@ public class Emprestimo implements Serializable {
     public void setDataDevolucaoPrevista(Date dataDevolucaoPrevista) {
         this.dataDevolucaoPrevista = dataDevolucaoPrevista;
     }
-    
+
     public void calculaDevolucaoPrevista() {
         Calendar c = Calendar.getInstance();
-        if(dataEmprestimo != null){
-            
+        if (dataEmprestimo != null) {
+
             c.setTime(dataEmprestimo);
-            
-            if(idExemplar.getCircular() && idUsuario.getTipo().equals('C')){
+
+            if (idExemplar.getCircular() && idUsuario.getTipo().equals('C')) {
                 c.add(Calendar.DAY_OF_MONTH, 10);
-            } else if(idExemplar.getCircular() && !idUsuario.getTipo().equals('C')){
+            } else if (idExemplar.getCircular() && !idUsuario.getTipo().equals('C')) {
                 c.add(Calendar.DAY_OF_MONTH, 15);
-            } else if(!idExemplar.getCircular()) {
+            } else if (!idExemplar.getCircular()) {
                 c.add(Calendar.DAY_OF_MONTH, 1);
             }
-            
-            if(c.get(Calendar.DAY_OF_WEEK) == Calendar.SATURDAY){
+
+            if (c.get(Calendar.DAY_OF_WEEK) == Calendar.SATURDAY) {
                 c.add(Calendar.DAY_OF_MONTH, 2);
-            } else if(c.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY){
+            } else if (c.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY) {
                 c.add(Calendar.DAY_OF_MONTH, 1);
             }
         } else {
@@ -167,7 +168,6 @@ public class Emprestimo implements Serializable {
 
     @Override
     public String toString() {
-        return  Integer.toString(id);
+        return Integer.toString(id);
     }
-    
 }
