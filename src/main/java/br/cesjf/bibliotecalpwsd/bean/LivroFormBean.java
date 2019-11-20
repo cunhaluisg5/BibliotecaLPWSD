@@ -5,12 +5,12 @@
  */
 package br.cesjf.bibliotecalpwsd.bean;
 
-import br.cesjf.bibliotecalpwsd.dao.AssuntoDAO;
-import br.cesjf.bibliotecalpwsd.dao.AutorDAO;
-import br.cesjf.bibliotecalpwsd.dao.EditoraDAO;
-import br.cesjf.bibliotecalpwsd.dao.LivroDAO;
+import br.cesjf.bibliotecalpwsd.dao.DAO;
+import br.cesjf.bibliotecalpwsd.model.Assunto;
+import br.cesjf.bibliotecalpwsd.model.Autor;
 import br.cesjf.bibliotecalpwsd.model.Editora;
 import br.cesjf.bibliotecalpwsd.model.Livro;
+import br.cesjf.bibliotecalpwsd.util.Mensagem;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -19,7 +19,6 @@ import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.Collections;
 import java.util.List;
-import javax.faces.application.FacesMessage;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
@@ -35,7 +34,7 @@ import org.primefaces.model.UploadedFile;
 @Named
 @ViewScoped
 public class LivroFormBean implements Serializable {
-    
+
     private static final long serialVersionUID = 1L;
     private Livro livro;
     private List assuntos;
@@ -44,23 +43,32 @@ public class LivroFormBean implements Serializable {
     private int id;
     private UploadedFile uploadedFile;
     private final String diretorio;
+    private final DAO<Assunto> assuntoDao;
+    private final DAO<Autor> autorDao;
+    private final DAO<Editora> editoraDao;
+    private final DAO<Livro> livroDao;
 
     //construtor
     public LivroFormBean() {
-        assuntos = new AssuntoDAO().buscarTodas();
-        autores = new AutorDAO().buscarTodas();
-        editoras = new EditoraDAO().buscarTodas();
-        
+        assuntoDao = new DAO<Assunto>();
+        autorDao = new DAO<Autor>();
+        editoraDao = new DAO<Editora>();
+        livroDao = new DAO<Livro>();
+
+        assuntos = assuntoDao.buscarTodas(Assunto.class);
+        autores = autorDao.buscarTodas(Autor.class);
+        editoras = editoraDao.buscarTodas(Editora.class);
+
         ExternalContext e = FacesContext.getCurrentInstance().getExternalContext();
         diretorio = e.getRealPath("resources\\arquivos");
     }
-    
+
     public void init() {
-        if(Faces.isAjaxRequest()){
-           return;
+        if (Faces.isAjaxRequest()) {
+            return;
         }
         if (id > 0) {
-            livro = new LivroDAO().buscar(id);
+            livro = (Livro) livroDao.buscar(Livro.class, id);
         } else {
             livro = new Livro();
         }
@@ -69,13 +77,13 @@ public class LivroFormBean implements Serializable {
     //Métodos dos botões 
     public void record(ActionEvent actionEvent) {
         upload();
-        msgScreen(new LivroDAO().persistir(livro));
+        Mensagem.msgScreen(livroDao.persistir(livro));
     }
-    
+
     public void exclude(ActionEvent actionEvent) {
-       delete(1);
-       delete(2);
-       msgScreen(new LivroDAO().remover(livro));
+        delete(1);
+        delete(2);
+        Mensagem.msgScreen(livroDao.remover(livro));
     }
 
     //getters and setters
@@ -121,7 +129,7 @@ public class LivroFormBean implements Serializable {
     public void setEditoras(List editoras) {
         this.editoras = editoras;
     }
-    
+
     public String getCapa() {
         return diretorio + "\\" + livro.getArquivo();
     }
@@ -134,27 +142,19 @@ public class LivroFormBean implements Serializable {
         this.uploadedFile = uploadedFile;
         upload();
     }
-    
+
     public void clear() {
         livro = new Livro();
     }
-    
+
     public boolean isNew() {
         return livro == null || livro.getId() == null || livro.getId() == 0;
     }
-    
-    public void msgScreen(String msg) {
-        if(msg.contains("Não")){
-            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "Aviso", msg));
-        } else {
-            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Informação", msg));
-        }
-    }
-    
+
     public void upload() {
-        
-        if(uploadedFile != null) {
-            
+
+        if (uploadedFile != null) {
+
             File dir = new File(diretorio);
 
             if (!dir.exists()) {
@@ -169,40 +169,39 @@ public class LivroFormBean implements Serializable {
                 OutputStream out = new FileOutputStream(file);
                 out.write(uploadedFile.getContents());
                 out.close();
-                msgScreen("O arquivo " + uploadedFile.getFileName() + " foi salvo!");
-                if(uploadedFile.getFileName().toUpperCase().contains(".PDF")){
+                Mensagem.msgScreen("O arquivo " + uploadedFile.getFileName() + " foi salvo!");
+                if (uploadedFile.getFileName().toUpperCase().contains(".PDF")) {
                     livro.setArquivo(name);
-                }else{
+                } else {
                     livro.setCapa(name);
                 }
                 uploadedFile = null;
-            } catch(IOException e) {
-               msgScreen("Não foi possível salvar o arquivo " + uploadedFile.getFileName() + "!" + e);
+            } catch (IOException e) {
+                Mensagem.msgScreen("Não foi possível salvar o arquivo " + uploadedFile.getFileName() + "!" + e);
             }
         }
     }
-    
+
     public void delete(int i) {
-        
+
         File file;
-        if(i == 1 && livro.getCapa() != null) {
+        if (i == 1 && livro.getCapa() != null) {
             file = new File(diretorio + "\\" + livro.getCapa());
             file.delete();
-        } else if(i == 2 && livro.getArquivo() != null) {
+        } else if (i == 2 && livro.getArquivo() != null) {
             file = new File(diretorio + "\\" + livro.getArquivo());
             file.delete();
         }
-        
-        msgScreen("Arquivo apagado com sucesso");
-        
-        if(i == 1) {
+
+        Mensagem.msgScreen("Arquivo apagado com sucesso");
+
+        if (i == 1) {
             livro.setCapa(null);
         } else {
             livro.setArquivo(null);
         }
-        
-        new LivroDAO().persistir(livro);
-        
+
+        livroDao.persistir(livro);
+
     }
-    
 }

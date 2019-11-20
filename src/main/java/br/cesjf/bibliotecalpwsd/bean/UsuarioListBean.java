@@ -5,14 +5,13 @@
  */
 package br.cesjf.bibliotecalpwsd.bean;
 
-import br.cesjf.bibliotecalpwsd.dao.UsuarioDAO;
+import br.cesjf.bibliotecalpwsd.dao.DAO;
 import br.cesjf.bibliotecalpwsd.model.Usuario;
+import br.cesjf.bibliotecalpwsd.util.Mensagem;
 import br.cesjf.bibliotecalpwsd.util.ProcessReport;
 import com.github.adminfaces.template.exception.BusinessException;
 import java.io.Serializable;
 import java.util.List;
-import javax.faces.application.FacesMessage;
-import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
 import org.omnifaces.cdi.ViewScoped;
 import javax.inject.Named;
@@ -24,42 +23,44 @@ import javax.inject.Named;
 @Named
 @ViewScoped
 public class UsuarioListBean extends ProcessReport implements Serializable {
-    
+
     private static final long serialVersionUID = 1L;
     private Usuario usuario;
     private List usuarios;
     private List usuariosSelecionados;
     private List usuariosFiltrados;
     private Integer id;
+    private final DAO<Usuario> usuarioDao;
 
     //construtor
     public UsuarioListBean() {
-        usuarios = new UsuarioDAO().buscarTodas();
+        usuarioDao = new DAO<Usuario>();
+        usuarios = usuarioDao.buscarTodas(Usuario.class);
         usuario = new Usuario();
     }
 
     //Métodos dos botões 
     public void record(ActionEvent actionEvent) {
-        msgScreen(new UsuarioDAO().persistir(usuario));
-        usuarios = new UsuarioDAO().buscarTodas();
+        Mensagem.msgScreen(usuarioDao.persistir(usuario));
+        usuarios = usuarioDao.buscarTodas(Usuario.class);
     }
 
     public void exclude(ActionEvent actionEvent) {
-        for (Object a: usuariosSelecionados){
-            msgScreen(new UsuarioDAO().remover((Usuario) a));
+        for (Object a : usuariosSelecionados) {
+            Mensagem.msgScreen(usuarioDao.remover((Usuario) a));
         }
-        usuarios = new UsuarioDAO().buscarTodas();
+        usuarios = usuarioDao.buscarTodas(Usuario.class);
     }
-    
+
     public void novo(ActionEvent actionEvent) {
         usuario = new Usuario();
     }
-    
+
     public void buscarPorId(Integer id) {
         if (id == null) {
             throw new BusinessException("Insira um ID");
         }
-        usuariosSelecionados.add(new UsuarioDAO().buscar(id));
+        usuariosSelecionados.add(usuarioDao.buscar(Usuario.class, id));
     }
 
     //getters and setters
@@ -102,13 +103,4 @@ public class UsuarioListBean extends ProcessReport implements Serializable {
     public void setId(Integer id) {
         this.id = id;
     }
-    
-    public void msgScreen(String msg) {
-        if(msg.contains("Não")){
-            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "Aviso", msg));
-        } else {
-            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Informação", msg));
-        }
-    }
-    
 }

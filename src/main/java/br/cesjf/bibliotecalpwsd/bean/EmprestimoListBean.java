@@ -5,15 +5,14 @@
  */
 package br.cesjf.bibliotecalpwsd.bean;
 
-import br.cesjf.bibliotecalpwsd.dao.EmprestimoDAO;
+import br.cesjf.bibliotecalpwsd.dao.DAO;
 import br.cesjf.bibliotecalpwsd.model.Emprestimo;
+import br.cesjf.bibliotecalpwsd.util.Mensagem;
 import br.cesjf.bibliotecalpwsd.util.ProcessReport;
 import com.github.adminfaces.template.exception.BusinessException;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
-import javax.faces.application.FacesMessage;
-import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
 import org.omnifaces.cdi.ViewScoped;
 import javax.inject.Named;
@@ -25,42 +24,44 @@ import javax.inject.Named;
 @Named
 @ViewScoped
 public class EmprestimoListBean extends ProcessReport implements Serializable {
-    
+
     private static final long serialVersionUID = 1L;
     private Emprestimo emprestimo;
     private List emprestimos;
     private List emprestimosSelecionados;
     private List emprestimosFiltrados;
     private Integer id;
+    private final DAO<Emprestimo> emprestimoDao;
 
     //construtor
     public EmprestimoListBean() {
-        emprestimos = new EmprestimoDAO().buscarTodas();
+        emprestimoDao = new DAO<Emprestimo>();
+        emprestimos = emprestimoDao.buscarTodas(Emprestimo.class);
         emprestimo = new Emprestimo();
     }
 
     //Métodos dos botões 
     public void record(ActionEvent actionEvent) {
-        msgScreen(new EmprestimoDAO().persistir(emprestimo));
-        emprestimos = new EmprestimoDAO().buscarTodas();
+        Mensagem.msgScreen(emprestimoDao.persistir(emprestimo));
+        emprestimos = emprestimoDao.buscarTodas(Emprestimo.class);
     }
 
     public void exclude(ActionEvent actionEvent) {
-        for (Object a: emprestimosSelecionados){
-            msgScreen(new EmprestimoDAO().remover((Emprestimo) a));
+        for (Object a : emprestimosSelecionados) {
+            Mensagem.msgScreen(emprestimoDao.remover((Emprestimo) a));
         }
-        emprestimos = new EmprestimoDAO().buscarTodas();
+        emprestimos = emprestimoDao.buscarTodas(Emprestimo.class);
     }
-    
+
     public void novo(ActionEvent actionEvent) {
         emprestimo = new Emprestimo();
     }
-    
+
     public void buscarPorId(Integer id) {
         if (id == null) {
             throw new BusinessException("Insira um ID");
         }
-        emprestimosSelecionados.add(new EmprestimoDAO().buscar(id));
+        emprestimosSelecionados.add(emprestimoDao.buscar(Emprestimo.class, id));
     }
 
     //getters and setters
@@ -103,19 +104,10 @@ public class EmprestimoListBean extends ProcessReport implements Serializable {
     public void setId(Integer id) {
         this.id = id;
     }
-    
-    public void msgScreen(String msg) {
-        if(msg.contains("Não")){
-            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "Aviso", msg));
-        } else {
-            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Informação", msg));
-        }
-    }
-    
+
     public void efetuaDevolucao() {
         emprestimo.setDataDevolucao(new Date());
-        new EmprestimoDAO().persistir(emprestimo);
-        msgScreen("Devolução efetuada com sucesso!");
+        emprestimoDao.persistir(emprestimo);
+        Mensagem.msgScreen("Devolução efetuada com sucesso!");
     }
-    
 }

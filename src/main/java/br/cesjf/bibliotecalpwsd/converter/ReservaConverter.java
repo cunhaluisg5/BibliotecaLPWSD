@@ -5,7 +5,7 @@
  */
 package br.cesjf.bibliotecalpwsd.converter;
 
-import br.cesjf.bibliotecalpwsd.dao.ReservaDAO;
+import br.cesjf.bibliotecalpwsd.dao.DAO;
 import br.cesjf.bibliotecalpwsd.model.Reserva;
 import java.io.Serializable;
 import javax.faces.component.UIComponent;
@@ -19,12 +19,18 @@ import javax.faces.convert.FacesConverter;
  */
 @FacesConverter(forClass = Reserva.class, value = "reservaConverter")
 public class ReservaConverter implements Converter, Serializable {
+
     private static final long serialVersionUID = 1L;
+    private DAO<Reserva> reservaDao;
+
+    public ReservaConverter() {
+        reservaDao = new DAO<Reserva>();
+    }
 
     @Override
     public Object getAsObject(FacesContext arg0, UIComponent arg1, String id) {
         if (id != null && !id.isEmpty()) {
-            return (Reserva) new ReservaDAO().buscar(Integer.valueOf(id));
+            return (Reserva) reservaDao.buscar(Reserva.class, Integer.valueOf(id));
         }
         return id;
     }

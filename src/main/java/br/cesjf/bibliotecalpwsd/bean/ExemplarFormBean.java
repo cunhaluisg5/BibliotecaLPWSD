@@ -5,14 +5,13 @@
  */
 package br.cesjf.bibliotecalpwsd.bean;
 
-import br.cesjf.bibliotecalpwsd.dao.ExemplarDAO;
-import br.cesjf.bibliotecalpwsd.dao.LivroDAO;
+import br.cesjf.bibliotecalpwsd.dao.DAO;
 import br.cesjf.bibliotecalpwsd.model.Exemplar;
+import br.cesjf.bibliotecalpwsd.model.Livro;
+import br.cesjf.bibliotecalpwsd.util.Mensagem;
 import java.io.Serializable;
 import java.util.Collections;
 import java.util.List;
-import javax.faces.application.FacesMessage;
-import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
 import org.omnifaces.cdi.ViewScoped;
 import javax.inject.Named;
@@ -25,23 +24,27 @@ import org.omnifaces.util.Faces;
 @Named
 @ViewScoped
 public class ExemplarFormBean implements Serializable {
-    
+
     private static final long serialVersionUID = 1L;
     private Exemplar exemplar;
     private int id;
     private List livros;
+    private final DAO<Exemplar> exemplarDao;
+    private final DAO<Livro> livroDao;
 
     //construtor
     public ExemplarFormBean() {
-        livros = new LivroDAO().buscarTodas();
+        exemplarDao = new DAO<Exemplar>();
+        livroDao = new DAO<Livro>();
+        livros = livroDao.buscarTodas(Livro.class);
     }
-    
+
     public void init() {
-        if(Faces.isAjaxRequest()){
-           return;
+        if (Faces.isAjaxRequest()) {
+            return;
         }
         if (id > 0) {
-            exemplar = new ExemplarDAO().buscar(id);
+            exemplar = (Exemplar) exemplarDao.buscar(Exemplar.class, id);
         } else {
             exemplar = new Exemplar();
         }
@@ -49,11 +52,11 @@ public class ExemplarFormBean implements Serializable {
 
     //Métodos dos botões 
     public void record(ActionEvent actionEvent) {
-        msgScreen(new ExemplarDAO().persistir(exemplar));
+        Mensagem.msgScreen(exemplarDao.persistir(exemplar));
     }
-    
+
     public void exclude(ActionEvent actionEvent) {
-        msgScreen(new ExemplarDAO().remover(exemplar));
+        Mensagem.msgScreen(exemplarDao.remover(exemplar));
     }
 
     //getters and setters
@@ -81,21 +84,12 @@ public class ExemplarFormBean implements Serializable {
     public void setLivros(List livros) {
         this.livros = livros;
     }
-    
+
     public void clear() {
         exemplar = new Exemplar();
     }
-    
+
     public boolean isNew() {
         return exemplar == null || exemplar.getId() == null || exemplar.getId() == 0;
     }
-    
-    public void msgScreen(String msg) {
-        if(msg.contains("Não")){
-            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "Aviso", msg));
-        } else {
-            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Informação", msg));
-        }
-    }
-
 }

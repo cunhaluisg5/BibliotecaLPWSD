@@ -5,11 +5,10 @@
  */
 package br.cesjf.bibliotecalpwsd.bean;
 
-import br.cesjf.bibliotecalpwsd.dao.EditoraDAO;
+import br.cesjf.bibliotecalpwsd.dao.DAO;
 import br.cesjf.bibliotecalpwsd.model.Editora;
+import br.cesjf.bibliotecalpwsd.util.Mensagem;
 import java.io.Serializable;
-import javax.faces.application.FacesMessage;
-import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
 import org.omnifaces.cdi.ViewScoped;
 import javax.inject.Named;
@@ -22,21 +21,23 @@ import org.omnifaces.util.Faces;
 @Named
 @ViewScoped
 public class EditoraFormBean implements Serializable {
-    
+
     private static final long serialVersionUID = 1L;
     private Editora editora;
     private int id;
+    private final DAO<Editora> editoraDao;
 
     //construtor
     public EditoraFormBean() {
+        editoraDao = new DAO<Editora>();
     }
-    
+
     public void init() {
-        if(Faces.isAjaxRequest()){
-           return;
+        if (Faces.isAjaxRequest()) {
+            return;
         }
         if (id > 0) {
-            editora = new EditoraDAO().buscar(id);
+            editora = (Editora) editoraDao.buscar(Editora.class, id);
         } else {
             editora = new Editora();
         }
@@ -44,11 +45,11 @@ public class EditoraFormBean implements Serializable {
 
     //Métodos dos botões 
     public void record(ActionEvent actionEvent) {
-        msgScreen(new EditoraDAO().persistir(editora));
+        Mensagem.msgScreen(editoraDao.persistir(editora));
     }
-    
+
     public void exclude(ActionEvent actionEvent) {
-        msgScreen(new EditoraDAO().remover(editora));
+        Mensagem.msgScreen(editoraDao.remover(editora));
     }
 
     //getters and setters
@@ -67,21 +68,12 @@ public class EditoraFormBean implements Serializable {
     public void setId(int id) {
         this.id = id;
     }
-    
+
     public void clear() {
         editora = new Editora();
     }
-    
+
     public boolean isNew() {
         return editora == null || editora.getId() == null || editora.getId() == 0;
     }
-    
-    public void msgScreen(String msg) {
-        if(msg.contains("Não")){
-            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "Aviso", msg));
-        } else {
-            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Informação", msg));
-        }
-    }
-
 }

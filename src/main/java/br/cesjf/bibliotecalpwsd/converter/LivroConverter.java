@@ -5,7 +5,7 @@
  */
 package br.cesjf.bibliotecalpwsd.converter;
 
-import br.cesjf.bibliotecalpwsd.dao.LivroDAO;
+import br.cesjf.bibliotecalpwsd.dao.DAO;
 import br.cesjf.bibliotecalpwsd.model.Livro;
 import java.io.Serializable;
 import javax.faces.component.UIComponent;
@@ -19,12 +19,18 @@ import javax.faces.convert.FacesConverter;
  */
 @FacesConverter(forClass = Livro.class, value = "livroConverter")
 public class LivroConverter implements Converter, Serializable {
+
     private static final long serialVersionUID = 1L;
+    private DAO<Livro> livroDao;
+
+    public LivroConverter() {
+        livroDao = new DAO<Livro>();
+    }
 
     @Override
     public Object getAsObject(FacesContext arg0, UIComponent arg1, String id) {
         if (id != null && !id.isEmpty()) {
-            return (Livro) new LivroDAO().buscar(Integer.valueOf(id));
+            return (Livro) livroDao.buscar(Livro.class, Integer.valueOf(id));
         }
         return id;
     }

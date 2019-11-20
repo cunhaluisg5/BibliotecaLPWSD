@@ -5,7 +5,7 @@
  */
 package br.cesjf.bibliotecalpwsd.converter;
 
-import br.cesjf.bibliotecalpwsd.dao.AutorDAO;
+import br.cesjf.bibliotecalpwsd.dao.DAO;
 import br.cesjf.bibliotecalpwsd.model.Autor;
 import java.io.Serializable;
 import javax.faces.component.UIComponent;
@@ -19,12 +19,18 @@ import javax.faces.convert.FacesConverter;
  */
 @FacesConverter(forClass = Autor.class, value = "autorConverter")
 public class AutorConverter implements Converter, Serializable {
+
     private static final long serialVersionUID = 1L;
+    private DAO<Autor> autorDao;
+
+    public AutorConverter() {
+        autorDao = new DAO<Autor>();
+    }
 
     @Override
     public Object getAsObject(FacesContext arg0, UIComponent arg1, String id) {
         if (id != null && !id.isEmpty()) {
-            return (Autor) new AutorDAO().buscar(Integer.valueOf(id));
+            return (Autor) autorDao.buscar(Autor.class, Integer.valueOf(id));
         }
         return id;
     }

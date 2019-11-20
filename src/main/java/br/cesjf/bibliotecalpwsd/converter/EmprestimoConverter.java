@@ -5,7 +5,7 @@
  */
 package br.cesjf.bibliotecalpwsd.converter;
 
-import br.cesjf.bibliotecalpwsd.dao.EmprestimoDAO;
+import br.cesjf.bibliotecalpwsd.dao.DAO;
 import br.cesjf.bibliotecalpwsd.model.Emprestimo;
 import java.io.Serializable;
 import javax.faces.component.UIComponent;
@@ -19,12 +19,18 @@ import javax.faces.convert.FacesConverter;
  */
 @FacesConverter(forClass = Emprestimo.class, value = "emprestimoConverter")
 public class EmprestimoConverter implements Converter, Serializable {
+
     private static final long serialVersionUID = 1L;
+    private DAO<Emprestimo> emprestimoDao;
+
+    public EmprestimoConverter() {
+        emprestimoDao = new DAO<Emprestimo>();
+    }
 
     @Override
     public Object getAsObject(FacesContext arg0, UIComponent arg1, String id) {
         if (id != null && !id.isEmpty()) {
-            return (Emprestimo) new EmprestimoDAO().buscar(Integer.valueOf(id));
+            return (Emprestimo) emprestimoDao.buscar(Emprestimo.class, Integer.valueOf(id));
         }
         return id;
     }

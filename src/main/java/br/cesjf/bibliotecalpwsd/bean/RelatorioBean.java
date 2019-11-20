@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.Map;
 import org.omnifaces.cdi.ViewScoped;
 import javax.inject.Named;
+
 /**
  *
  * @author dmeireles
@@ -23,11 +24,11 @@ import javax.inject.Named;
 public class RelatorioBean implements Serializable {
 
     private static final long serialVersionUID = 1L;
-    
+
     private String relatorio;
-    
+
     private Map<String, String> tipos;
-    
+
     private List<Date> range;
 
     public RelatorioBean() {
@@ -55,12 +56,12 @@ public class RelatorioBean implements Serializable {
     public void setTipos(Map<String, String> tipos) {
         this.tipos = tipos;
     }
-    
+
     public void gerarRelatorio() {
         Relatorio relatorio = new Relatorio();
         relatorio.getRelatorio(this.relatorio, null, null);
     }
-    
+
     public void gerarRelatorioGerencial() {
         Relatorio relatorio = new Relatorio();
         relatorio.getRelatorio("RelatorioGerencial", range.get(0), range.get(1));
@@ -73,5 +74,4 @@ public class RelatorioBean implements Serializable {
     public void setRange(List<Date> range) {
         this.range = range;
     }
-    
 }
