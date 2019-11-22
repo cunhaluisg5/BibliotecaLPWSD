@@ -50,10 +50,10 @@ public class LivroFormBean implements Serializable {
 
     //construtor
     public LivroFormBean() {
-        assuntoDao = new DAO<Assunto>();
-        autorDao = new DAO<Autor>();
-        editoraDao = new DAO<Editora>();
-        livroDao = new DAO<Livro>();
+        assuntoDao = new DAO<>();
+        autorDao = new DAO<>();
+        editoraDao = new DAO<>();
+        livroDao = new DAO<>();
 
         assuntos = assuntoDao.buscarTodas(Assunto.class);
         autores = autorDao.buscarTodas(Autor.class);
@@ -166,9 +166,9 @@ public class LivroFormBean implements Serializable {
                 name = name.replace("-", "").replace(".", "").replace(":", "").replace(" ", "");
                 name = name + uploadedFile.getFileName();
                 File file = new File(dir, name);
-                OutputStream out = new FileOutputStream(file);
-                out.write(uploadedFile.getContents());
-                out.close();
+                try (OutputStream out = new FileOutputStream(file)) {
+                    out.write(uploadedFile.getContents());
+                }
                 Mensagem.msgScreen("O arquivo " + uploadedFile.getFileName() + " foi salvo!");
                 if (uploadedFile.getFileName().toUpperCase().contains(".PDF")) {
                     livro.setArquivo(name);

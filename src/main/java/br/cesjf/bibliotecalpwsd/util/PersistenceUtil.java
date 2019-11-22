@@ -17,7 +17,7 @@ import org.hibernate.Session;
  * @author dmeireles
  */
 public class PersistenceUtil {
-    
+
     private static final String PERSISTENCE_UNIT_NAME = "BibliotecaLPWSD";
     private static EntityManagerFactory FACTORY;
     private static ThreadLocal<EntityManager> MANAGER = new ThreadLocal<EntityManager>();
@@ -28,7 +28,7 @@ public class PersistenceUtil {
             try {
                 FACTORY = Persistence.createEntityManagerFactory(PERSISTENCE_UNIT_NAME);
             } catch (Throwable e) {
-                Logger.getLogger (PersistenceUtil.class.getName()).log(Level.WARNING, "Falha na criação do EntityManagerFactory!", e.getMessage());
+                Logger.getLogger(PersistenceUtil.class.getName()).log(Level.WARNING, "Falha na criação do EntityManagerFactory!", e.getMessage());
                 throw new ExceptionInInitializerError(e);
             }
         }
@@ -58,5 +58,4 @@ public class PersistenceUtil {
         }
         return session;
     }
-    
 }

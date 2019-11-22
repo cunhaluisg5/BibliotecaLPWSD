@@ -107,10 +107,10 @@
         
         <!-- javax -->
         <dependency>
-          <groupId>javax</groupId>
-          <artifactId>javaee-web-api</artifactId>
-          <version>8.0.1</version>
-          <scope>provided</scope>
+            <groupId>javax</groupId>
+            <artifactId>javaee-web-api</artifactId>
+            <version>8.0.1</version>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>javax.servlet</groupId>
@@ -164,6 +164,16 @@
     
     <build>
         <plugins>
+            <plugin>
+                <groupId>org.sonarsource.scanner.maven</groupId>
+                <artifactId>sonar-maven-plugin</artifactId>
+                <version>3.6.0.1398</version>
+            </plugin>
+            <plugin>
+                <groupId>org.jacoco</groupId>
+                <artifactId>jacoco-maven-plugin</artifactId>
+                <version>0.8.4</version>
+            </plugin>
             <plugin>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.3</version>
