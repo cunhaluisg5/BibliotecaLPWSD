@@ -34,7 +34,7 @@ public class ExemplarListBean extends ProcessReport implements Serializable {
 
     //construtor
     public ExemplarListBean() {
-        exemplarDao = new DAO<Exemplar>();
+        exemplarDao = new DAO<>();
         exemplares = exemplarDao.buscarTodas(Exemplar.class);
         exemplar = new Exemplar();
     }
@@ -46,9 +46,9 @@ public class ExemplarListBean extends ProcessReport implements Serializable {
     }
 
     public void exclude(ActionEvent actionEvent) {
-        for (Object a : exemplaresSelecionados) {
+        exemplaresSelecionados.forEach((a) -> {
             Mensagem.msgScreen(exemplarDao.remover((Exemplar) a));
-        }
+        });
         exemplares = exemplarDao.buscarTodas(Exemplar.class);
     }
 

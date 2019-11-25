@@ -29,7 +29,7 @@ public class EditoraFormBean implements Serializable {
 
     //construtor
     public EditoraFormBean() {
-        editoraDao = new DAO<Editora>();
+        editoraDao = new DAO<>();
     }
 
     public void init() {

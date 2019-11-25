@@ -29,7 +29,7 @@ public class AutorFormBean implements Serializable {
 
     //construtor
     public AutorFormBean() {
-        autorDao = new DAO<Autor>();
+        autorDao = new DAO<>();
     }
 
     public void init() {

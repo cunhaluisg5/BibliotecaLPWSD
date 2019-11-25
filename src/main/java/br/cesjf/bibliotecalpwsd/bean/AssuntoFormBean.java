@@ -29,7 +29,7 @@ public class AssuntoFormBean implements Serializable {
 
     //construtor
     public AssuntoFormBean() {
-        assuntoDao = new DAO<Assunto>();
+        assuntoDao = new DAO<>();
     }
 
     public void init() {

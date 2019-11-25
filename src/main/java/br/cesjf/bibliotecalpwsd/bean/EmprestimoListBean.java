@@ -35,7 +35,7 @@ public class EmprestimoListBean extends ProcessReport implements Serializable {
 
     //construtor
     public EmprestimoListBean() {
-        emprestimoDao = new DAO<Emprestimo>();
+        emprestimoDao = new DAO<>();
         emprestimos = emprestimoDao.buscarTodas(Emprestimo.class);
         emprestimo = new Emprestimo();
     }
@@ -47,9 +47,9 @@ public class EmprestimoListBean extends ProcessReport implements Serializable {
     }
 
     public void exclude(ActionEvent actionEvent) {
-        for (Object a : emprestimosSelecionados) {
+        emprestimosSelecionados.forEach((a) -> {
             Mensagem.msgScreen(emprestimoDao.remover((Emprestimo) a));
-        }
+        });
         emprestimos = emprestimoDao.buscarTodas(Emprestimo.class);
     }
 

@@ -34,7 +34,7 @@ public class AutorListBean extends ProcessReport implements Serializable {
 
     //construtor
     public AutorListBean() {
-        autorDao = new DAO<Autor>();
+        autorDao = new DAO<>();
         autores = autorDao.buscarTodas(Autor.class);
         autor = new Autor();
     }
@@ -46,9 +46,9 @@ public class AutorListBean extends ProcessReport implements Serializable {
     }
 
     public void exclude(ActionEvent actionEvent) {
-        for (Object a : autoresSelecionados) {
+        autoresSelecionados.forEach((a) -> {
             Mensagem.msgScreen(autorDao.remover((Autor) a));
-        }
+        });
         autores = autorDao.buscarTodas(Autor.class);
     }
 

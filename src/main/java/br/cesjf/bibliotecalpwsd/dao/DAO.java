@@ -6,6 +6,8 @@
 package br.cesjf.bibliotecalpwsd.dao;
 
 import br.cesjf.bibliotecalpwsd.model.IEntidade;
+import br.cesjf.bibliotecalpwsd.model.Livro;
+import br.cesjf.bibliotecalpwsd.model.Usuario;
 import br.cesjf.bibliotecalpwsd.util.PersistenceUtil;
 import java.util.ArrayList;
 import java.util.List;
@@ -100,5 +102,44 @@ public class DAO<E extends IEntidade> implements IDAO<E> {
             Logger.getLogger(PersistenceUtil.class.getName()).log(Level.WARNING, "Registros não encontrados!", e.getMessage());
             return new ArrayList<>();
         }
+    }
+
+    public List<Livro> buscarTitulo(String titulo) {
+        return manager
+                .createNamedQuery("Livro.findByTitulo", Livro.class)
+                .setParameter("titulo", titulo)
+                .getResultList();
+    }
+
+    public Usuario buscarUsuario(String usuario) {
+        try {
+            Usuario user = manager
+                    .createNamedQuery("Usuario.findByUsuario", Usuario.class)
+                    .setParameter("usuario", usuario)
+                    .getSingleResult();
+            if (user != null && user.getId() > 0) {
+                return user;
+            } else {
+                Logger.getLogger(PersistenceUtil.class.getName()).log(Level.INFO, "Não encontrado!");
+                return null;
+            }
+        } catch (Exception e) {
+            Logger.getLogger(PersistenceUtil.class.getName()).log(Level.WARNING, "Não foram encontrados usuarios!", e.getMessage());
+            return null;
+        }
+    }
+    
+    public static Boolean login(String usuario, String senha) {
+        List <Usuario> users = manager
+                    .createNamedQuery("Usuario.findByUsuarioandSenha", Usuario.class)
+                    .setParameter("usuario", usuario)
+                    .setParameter("senha", senha)
+                    .getResultList();
+        if (users != null && users.size() > 0) {
+            Logger.getLogger(PersistenceUtil.class.getName()).log(Level.INFO, "Login efetuado com sucesso!");
+            return true;
+        }
+        Logger.getLogger(PersistenceUtil.class.getName()).log(Level.INFO, "Usuário ou senha inválidos!");
+        return false;
     }
 }

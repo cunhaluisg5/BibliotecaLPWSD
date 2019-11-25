@@ -37,28 +37,26 @@ public class ReservaListBean extends ProcessReport implements Serializable {
 
     //construtor
     public ReservaListBean() {
-        reservaDao = new DAO<Reserva>();
+        reservaDao = new DAO<>();
         reservas = reservaDao.buscarTodas(Reserva.class);
         reserva = new Reserva();
         Calendar c = Calendar.getInstance();
-        for (Reserva r : reservas) {
-            if (!r.getCancelada()) {
-                if (r.getIdEmprestimo() == null) {
-                    c.setTime(r.getDataReserva());
-                    c.add(Calendar.DAY_OF_MONTH, 10);
-                    if (c.get(Calendar.DAY_OF_WEEK) == Calendar.SATURDAY) {
-                        c.add(Calendar.DAY_OF_MONTH, 2);
-                    } else if (c.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY) {
-                        c.add(Calendar.DAY_OF_MONTH, 1);
-                    }
-                    if (c.getTime().compareTo(new Date()) < 0) {
-                        r.setCancelada(Boolean.TRUE);
-                        r.setObsCancelamento("Sistema");
-                        reservaDao.persistir(r);
-                    }
-                }
+        reservas.stream().filter((r) -> (!r.getCancelada())).filter((r) -> (r.getIdEmprestimo() == null)).map((r) -> {
+            c.setTime(r.getDataReserva());
+            return r;
+        }).forEachOrdered((r) -> {
+            c.add(Calendar.DAY_OF_MONTH, 10);
+            if (c.get(Calendar.DAY_OF_WEEK) == Calendar.SATURDAY) {
+                c.add(Calendar.DAY_OF_MONTH, 2);
+            } else if (c.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY) {
+                c.add(Calendar.DAY_OF_MONTH, 1);
             }
-        }
+            if (c.getTime().compareTo(new Date()) < 0) {
+                r.setCancelada(Boolean.TRUE);
+                r.setObsCancelamento("Sistema");
+                reservaDao.persistir(r);
+            }
+        });
         reservas = reservaDao.buscarTodas(Reserva.class);
     }
 
@@ -69,9 +67,9 @@ public class ReservaListBean extends ProcessReport implements Serializable {
     }
 
     public void exclude(ActionEvent actionEvent) {
-        for (Object a : reservasSelecionados) {
+        reservasSelecionados.forEach((a) -> {
             Mensagem.msgScreen(reservaDao.remover((Reserva) a));
-        }
+        });
         reservas = reservaDao.buscarTodas(Reserva.class);
     }
 
@@ -128,10 +126,7 @@ public class ReservaListBean extends ProcessReport implements Serializable {
     }
 
     public Boolean getData(Date reserva) {
-        if (reserva.compareTo(new Date()) <= 0) {
-            return true;
-        }
-        return false;
+        return reserva.compareTo(new Date()) <= 0;
     }
 
     public void geraEmprestimo(ActionEvent actionEvent) {

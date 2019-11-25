@@ -6,7 +6,6 @@
 package br.cesjf.bibliotecalpwsd.bean;
 
 import br.cesjf.bibliotecalpwsd.dao.DAO;
-import br.cesjf.bibliotecalpwsd.dao.LivroDAO;
 import br.cesjf.bibliotecalpwsd.model.Livro;
 import br.cesjf.bibliotecalpwsd.util.Mensagem;
 import com.github.adminfaces.template.exception.BusinessException;
@@ -32,7 +31,7 @@ public class AcervoListBean implements Serializable {
 
     //construtor
     public AcervoListBean() {
-        livroDao = new DAO<Livro>();
+        livroDao = new DAO<>();
         livros = livroDao.buscarTodas(Livro.class);
     }
 
@@ -71,10 +70,10 @@ public class AcervoListBean implements Serializable {
     }
 
     public void buscarPorTitulo(String titulo) {
-        if (titulo.equals("") || titulo == null) {
+        if (titulo.equals("")) {
             throw new BusinessException("Insira um Título");
         }
-        livros = new LivroDAO().buscarTitulo(titulo);
+        livros = new DAO().buscarTitulo(titulo);
 
         if (livros.isEmpty()) {
             Mensagem.msgScreen("Não foram encontrados livros");
@@ -85,7 +84,7 @@ public class AcervoListBean implements Serializable {
     }
 
     public void limpar() {
-        livros = new LivroDAO().buscarTitulo(titulo);
+        livros = new DAO().buscarTitulo(titulo);
         this.id = null;
         this.titulo = null;
     }

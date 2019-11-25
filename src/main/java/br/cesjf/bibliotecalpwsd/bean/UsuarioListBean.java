@@ -34,7 +34,7 @@ public class UsuarioListBean extends ProcessReport implements Serializable {
 
     //construtor
     public UsuarioListBean() {
-        usuarioDao = new DAO<Usuario>();
+        usuarioDao = new DAO<>();
         usuarios = usuarioDao.buscarTodas(Usuario.class);
         usuario = new Usuario();
     }
@@ -46,9 +46,9 @@ public class UsuarioListBean extends ProcessReport implements Serializable {
     }
 
     public void exclude(ActionEvent actionEvent) {
-        for (Object a : usuariosSelecionados) {
+        usuariosSelecionados.forEach((a) -> {
             Mensagem.msgScreen(usuarioDao.remover((Usuario) a));
-        }
+        });
         usuarios = usuarioDao.buscarTodas(Usuario.class);
     }
 

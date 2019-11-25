@@ -34,7 +34,7 @@ public class AssuntoListBean extends ProcessReport implements Serializable {
 
     //construtor
     public AssuntoListBean() {
-        assuntoDao = new DAO<Assunto>();
+        assuntoDao = new DAO<>();
         assuntos = assuntoDao.buscarTodas(Assunto.class);
         assunto = new Assunto();
     }
@@ -46,9 +46,9 @@ public class AssuntoListBean extends ProcessReport implements Serializable {
     }
 
     public void exclude(ActionEvent actionEvent) {
-        for (Object a : assuntosSelecionados) {
+        assuntosSelecionados.forEach((a) -> {
             Mensagem.msgScreen(assuntoDao.remover((Assunto) a));
-        }
+        });
         assuntos = assuntoDao.buscarTodas(Assunto.class);
     }
 

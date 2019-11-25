@@ -34,8 +34,8 @@ public class ExemplarFormBean implements Serializable {
 
     //construtor
     public ExemplarFormBean() {
-        exemplarDao = new DAO<Exemplar>();
-        livroDao = new DAO<Livro>();
+        exemplarDao = new DAO<>();
+        livroDao = new DAO<>();
         livros = livroDao.buscarTodas(Livro.class);
     }
 

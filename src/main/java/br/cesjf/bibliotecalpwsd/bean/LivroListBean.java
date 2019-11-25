@@ -34,7 +34,7 @@ public class LivroListBean extends ProcessReport implements Serializable {
 
     //construtor
     public LivroListBean() {
-        livroDao = new DAO<Livro>();
+        livroDao = new DAO<>();
         livros = livroDao.buscarTodas(Livro.class);
         livro = new Livro();
     }
@@ -46,9 +46,9 @@ public class LivroListBean extends ProcessReport implements Serializable {
     }
 
     public void exclude(ActionEvent actionEvent) {
-        for (Object a : livrosSelecionados) {
+        livrosSelecionados.forEach((a) -> {
             Mensagem.msgScreen(livroDao.remover((Livro) a));
-        }
+        });
         livros = livroDao.buscarTodas(Livro.class);
     }
 

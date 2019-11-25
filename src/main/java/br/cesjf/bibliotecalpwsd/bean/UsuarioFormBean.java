@@ -33,13 +33,13 @@ public class UsuarioFormBean implements Serializable {
     //construtor
     public UsuarioFormBean() {
         //1 - Aluno, 2 - Professor, 3 - Funcionário, 4 - Bibliotecário e 5 - Administrador
-        tipos = new HashMap<String, String>();
+        tipos = new HashMap<>();
         tipos.put("Aluno", "1");
         tipos.put("Professor", "2");
         tipos.put("Funcionário", "3");
         tipos.put("Bibliotecário", "4");
         tipos.put("Administrador", "5");
-        usuarioDao = new DAO<Usuario>();
+        usuarioDao = new DAO<>();
     }
 
     public void init() {

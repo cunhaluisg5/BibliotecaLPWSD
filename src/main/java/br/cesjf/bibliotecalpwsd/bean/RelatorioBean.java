@@ -32,13 +32,13 @@ public class RelatorioBean implements Serializable {
     private List<Date> range;
 
     public RelatorioBean() {
-        tipos = new HashMap<String, String>();
+        tipos = new HashMap<>();
         tipos.put("Relatório de Livros/Exemplares", "Relatorio_01");
         tipos.put("Relatório de Livros Emprestados", "Relatorio_02");
         tipos.put("Relatório de Livros Reservados", "Relatorio_03");
         tipos.put("Relatório de Usuários Cadastrados", "Relatorio_04");
         tipos.put("Relatório de Livros com Atraso na Devolução", "Relatorio_05");
-        range = new ArrayList<Date>();
+        range = new ArrayList<>();
     }
 
     public String getRelatorio() {
@@ -58,7 +58,7 @@ public class RelatorioBean implements Serializable {
     }
 
     public void gerarRelatorio() {
-        Relatorio relatorio = new Relatorio();
+        Relatorio relatorio= new Relatorio();
         relatorio.getRelatorio(this.relatorio, null, null);
     }
 

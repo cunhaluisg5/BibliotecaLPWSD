@@ -34,7 +34,7 @@ public class EditoraListBean extends ProcessReport implements Serializable {
 
     //construtor
     public EditoraListBean() {
-        editoraDao = new DAO<Editora>();
+        editoraDao = new DAO<>();
         editoras = editoraDao.buscarTodas(Editora.class);
         editora = new Editora();
     }
@@ -46,9 +46,9 @@ public class EditoraListBean extends ProcessReport implements Serializable {
     }
 
     public void exclude(ActionEvent actionEvent) {
-        for (Object a : editorasSelecionados) {
+        editorasSelecionados.forEach((a) -> {
             Mensagem.msgScreen(editoraDao.remover((Editora) a));
-        }
+        });
         editoras = editoraDao.buscarTodas(Editora.class);
     }
 

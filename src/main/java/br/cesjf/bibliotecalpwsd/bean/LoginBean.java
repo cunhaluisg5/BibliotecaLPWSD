@@ -6,8 +6,6 @@
 package br.cesjf.bibliotecalpwsd.bean;
 
 import br.cesjf.bibliotecalpwsd.dao.DAO;
-import br.cesjf.bibliotecalpwsd.dao.LoginDAO;
-import br.cesjf.bibliotecalpwsd.dao.UsuarioDAO;
 import br.cesjf.bibliotecalpwsd.model.Usuario;
 import br.cesjf.bibliotecalpwsd.util.Mensagem;
 import com.github.adminfaces.template.session.AdminSession;
@@ -40,7 +38,7 @@ public class LoginBean extends AdminSession implements Serializable {
     private final String tabelaUsuario = Usuario.class.getName();
 
     public LoginBean() {
-        usuarioDao = new DAO<Usuario>();
+        usuarioDao = new DAO<>();
     }
 
     @Inject
@@ -77,8 +75,8 @@ public class LoginBean extends AdminSession implements Serializable {
     }
 
     public void login() throws IOException {
-        if (LoginDAO.login(usuario, senha)) {
-            Usuario u = (Usuario) new UsuarioDAO().buscarUsuario(usuario);
+        if (DAO.login(usuario, senha)) {
+            Usuario u = (Usuario) new DAO().buscarUsuario(usuario);
             HttpSession session = (HttpSession) FacesContext.getCurrentInstance().getExternalContext().getSession(false);
             session.setAttribute("usuario", u);
             session.setAttribute("nome", u.getUsuario());

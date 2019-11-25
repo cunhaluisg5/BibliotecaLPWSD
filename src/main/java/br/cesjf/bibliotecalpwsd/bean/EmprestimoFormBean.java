@@ -46,11 +46,11 @@ public class EmprestimoFormBean implements Serializable {
 
     //construtor
     public EmprestimoFormBean() {
-        usuarioDao = new DAO<Usuario>();
-        emprestimoDao = new DAO<Emprestimo>();
-        exemplarDao = new DAO<Exemplar>();
-        livroDao = new DAO<Livro>();
-        reservaDao = new DAO<Reserva>();
+        usuarioDao = new DAO<>();
+        emprestimoDao = new DAO<>();
+        exemplarDao = new DAO<>();
+        livroDao = new DAO<>();
+        reservaDao = new DAO<>();
     }
 
     public void init() {
