@@ -60,7 +60,7 @@ public class LivroFormBean implements Serializable {
         editoras = editoraDao.buscarTodas(Editora.class);
 
         ExternalContext e = FacesContext.getCurrentInstance().getExternalContext();
-        diretorio = e.getRealPath("resources\\arquivos");
+        diretorio = e.getRealPath("/resources/arquivos");
     }
 
     public void init() {

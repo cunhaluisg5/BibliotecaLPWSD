@@ -21,7 +21,7 @@ import org.primefaces.model.charts.optionconfig.title.Title;
  *
  * @author luisg
  */
-public class Dashboard {
+public abstract class Dashboard {
 
     protected Calendar data1;
     protected Calendar data2;

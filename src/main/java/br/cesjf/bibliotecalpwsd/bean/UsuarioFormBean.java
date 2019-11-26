@@ -7,6 +7,7 @@ package br.cesjf.bibliotecalpwsd.bean;
 
 import br.cesjf.bibliotecalpwsd.dao.DAO;
 import br.cesjf.bibliotecalpwsd.model.Usuario;
+import br.cesjf.bibliotecalpwsd.util.EUsuarios;
 import br.cesjf.bibliotecalpwsd.util.Mensagem;
 import java.io.Serializable;
 import java.util.HashMap;
@@ -34,11 +35,11 @@ public class UsuarioFormBean implements Serializable {
     public UsuarioFormBean() {
         //1 - Aluno, 2 - Professor, 3 - Funcionário, 4 - Bibliotecário e 5 - Administrador
         tipos = new HashMap<>();
-        tipos.put("Aluno", "1");
-        tipos.put("Professor", "2");
-        tipos.put("Funcionário", "3");
-        tipos.put("Bibliotecário", "4");
-        tipos.put("Administrador", "5");
+        tipos.put(EUsuarios.Aluno.toString(), "1");
+        tipos.put(EUsuarios.Professor.toString(), "2");
+        tipos.put(EUsuarios.Funcionário.toString(), "3");
+        tipos.put(EUsuarios.Bibliotecário.toString(), "4");
+        tipos.put(EUsuarios.Administrador.toString(), "5");
         usuarioDao = new DAO<>();
     }
 
